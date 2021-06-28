@@ -1,0 +1,18 @@
+apiVersion: security.accuknox.com/v1
+kind: KubeArmorPolicy
+metadata:
+  name: collection via libary 
+spec:
+  selectorLabels:
+      nodeSelector:
+          hostname: xyz
+
+- list: monitored_directories
+  items: [/boot, /lib, /lib64, /usr/lib, /usr/local/lib, /usr/local/sbin, /usr/local/bin, /root/.ssh, /etc/cardserver]
+
+process:
+    matchPatterns:
+    - pattern: (ps_name != listofbins) && ps_linkedso == (libbz2.* || libz.*)
+  action:
+    Audit
+  severity: 5
